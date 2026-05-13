@@ -1,9 +1,8 @@
 event:
   year: 2026
-  name: "Eurovision 2026 — Basel"
+  name: "Eurovision 2026 — Vienna"
 
 # Grand Final running order — update performance_order once the official draw is published.
-# Run `python manage.py load_event 2026` after any changes here (it's idempotent).
 # Add image filenames under data/2026/images/ and set the image field to match.
 entries:
   - performance_order: 1
