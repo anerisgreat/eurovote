@@ -131,9 +131,13 @@
               };
 
               serviceConfig = {
-                Type           = "simple";
-                DynamicUser    = true;
-                StateDirectory = "eurovote";
+                Type             = "simple";
+                DynamicUser      = true;
+                StateDirectory   = "eurovote";
+                # RuntimeDirectory creates /run/eurovote/ owned by the dynamic
+                # user, which is necessary because DynamicUser implies
+                # ProtectSystem=strict (makes /run read-only for the service).
+                RuntimeDirectory = "eurovote";
 
                 # Write ephemeral env file with secrets; never lands in the Nix store.
                 ExecStartPre = [
@@ -143,8 +147,8 @@
 
                     printf '%s\n' \
                       "DJANGO_SECRET_KEY=$SECRET_KEY" \
-                      > /run/eurovote-secrets.env
-                    chmod 600 /run/eurovote-secrets.env
+                      > "$RUNTIME_DIRECTORY/secrets.env"
+                    chmod 600 "$RUNTIME_DIRECTORY/secrets.env"
 
                     DJANGO_SECRET_KEY="$SECRET_KEY" \
                     DJANGO_DB_PATH="${cfg.dataDir}/db.sqlite3" \
@@ -156,12 +160,14 @@
 
                 ExecStart = pkgs.writeShellScript "eurovote-start" ''
                   set -euo pipefail
-                  source /run/eurovote-secrets.env
+                  source "$RUNTIME_DIRECTORY/secrets.env"
                   exec ${manage} runserver 127.0.0.1:${toString cfg.port}
                 '';
 
+                # RuntimeDirectory is cleaned up automatically by systemd on
+                # stop, so no explicit removal needed. Keep for explicitness.
                 ExecStopPost = pkgs.writeShellScript "eurovote-cleanup" ''
-                  rm -f /run/eurovote-secrets.env
+                  rm -f "$RUNTIME_DIRECTORY/secrets.env"
                 '';
               };
             };
