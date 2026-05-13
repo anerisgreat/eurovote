@@ -109,6 +109,12 @@
               default = "localhost 127.0.0.1";
               description = "Space-separated ALLOWED_HOSTS value";
             };
+
+            logoutRedirectUrl = lib.mkOption {
+              type    = lib.types.str;
+              default = "/";
+              description = "URL to redirect to after logout (e.g. Authelia's logout endpoint)";
+            };
           };
 
           config = lib.mkIf cfg.enable {
@@ -118,9 +124,10 @@
               after       = [ "network.target" ];
 
               environment = {
-                DJANGO_DEBUG   = "false";
-                ALLOWED_HOSTS  = cfg.allowedHosts;
-                DJANGO_DB_PATH = "${cfg.dataDir}/db.sqlite3";
+                DJANGO_DEBUG        = "false";
+                ALLOWED_HOSTS       = cfg.allowedHosts;
+                DJANGO_DB_PATH      = "${cfg.dataDir}/db.sqlite3";
+                LOGOUT_REDIRECT_URL = cfg.logoutRedirectUrl;
               };
 
               serviceConfig = {

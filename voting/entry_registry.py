@@ -8,6 +8,62 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 
+_COUNTRY_FLAGS = {
+    'albania': '🇦🇱',
+    'andorra': '🇦🇩',
+    'armenia': '🇦🇲',
+    'australia': '🇦🇺',
+    'austria': '🇦🇹',
+    'azerbaijan': '🇦🇿',
+    'belarus': '🇧🇾',
+    'belgium': '🇧🇪',
+    'bosnia': '🇧🇦',
+    'bosnia and herzegovina': '🇧🇦',
+    'bosnia & herzegovina': '🇧🇦',
+    'bulgaria': '🇧🇬',
+    'croatia': '🇭🇷',
+    'cyprus': '🇨🇾',
+    'czech republic': '🇨🇿',
+    'czechia': '🇨🇿',
+    'denmark': '🇩🇰',
+    'estonia': '🇪🇪',
+    'finland': '🇫🇮',
+    'france': '🇫🇷',
+    'georgia': '🇬🇪',
+    'germany': '🇩🇪',
+    'greece': '🇬🇷',
+    'hungary': '🇭🇺',
+    'iceland': '🇮🇸',
+    'ireland': '🇮🇪',
+    'israel': '🇮🇱',
+    'italy': '🇮🇹',
+    'latvia': '🇱🇻',
+    'lithuania': '🇱🇹',
+    'luxembourg': '🇱🇺',
+    'malta': '🇲🇹',
+    'moldova': '🇲🇩',
+    'monaco': '🇲🇨',
+    'montenegro': '🇲🇪',
+    'netherlands': '🇳🇱',
+    'north macedonia': '🇲🇰',
+    'macedonia': '🇲🇰',
+    'norway': '🇳🇴',
+    'poland': '🇵🇱',
+    'portugal': '🇵🇹',
+    'romania': '🇷🇴',
+    'russia': '🇷🇺',
+    'san marino': '🇸🇲',
+    'serbia': '🇷🇸',
+    'slovakia': '🇸🇰',
+    'slovenia': '🇸🇮',
+    'spain': '🇪🇸',
+    'sweden': '🇸🇪',
+    'switzerland': '🇨🇭',
+    'turkey': '🇹🇷',
+    'ukraine': '🇺🇦',
+    'united kingdom': '🇬🇧',
+}
+
 DATA_DIR = Path(__file__).resolve().parent.parent / 'data'
 
 
@@ -35,6 +91,10 @@ class EntryData:
         if self.image:
             return f"/media/{self.year}/images/{self.image}"
         return None
+
+    @property
+    def flag_emoji(self) -> str:
+        return _COUNTRY_FLAGS.get(self.country.lower(), '')
 
 
 @dataclass

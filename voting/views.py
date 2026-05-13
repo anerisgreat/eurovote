@@ -55,12 +55,19 @@ def index(request, year):
     voted_count = Vote.objects.filter(user=request.user, event_year=year).count()
     next_entry = _next_unvoted_entry(request.user, event)
 
+    orphaned_votes = Vote.objects.filter(
+        user=request.user,
+        event_year=year,
+        ranking_entries__isnull=True,
+    )
+
     return render(request, 'voting/index.html', {
         'event': event,
         'ranking': ranking,
         'total_entries': total_entries,
         'voted_count': voted_count,
         'next_entry': next_entry,
+        'orphaned_votes': orphaned_votes,
     })
 
 
@@ -104,6 +111,37 @@ def vote_next(request, year):
         'entry': entry,
         'form': form,
     })
+
+
+@login_required
+def rerank(request, year, vote_id):
+    _get_event_or_404(year)
+    vote = get_object_or_404(Vote, pk=vote_id, user=request.user, event_year=year)
+    ranking_entry = RankingEntry.objects.filter(vote=vote, user=request.user).first()
+
+    if ranking_entry:
+        pos = ranking_entry.position
+        ranking_entry.delete()
+        RankingEntry.objects.filter(
+            user=request.user,
+            vote__event_year=year,
+            position__gt=pos,
+        ).update(position=F('position') - 1)
+
+    ranked_ids = _get_ranked_vote_ids(request.user, year)
+
+    if not ranked_ids:
+        RankingEntry.objects.create(user=request.user, vote=vote, position=0)
+        return redirect('index', year=year)
+
+    request.session['bsort'] = {
+        'year': year,
+        'new_vote_id': vote.pk,
+        'ranked_ids': ranked_ids,
+        'left': 0,
+        'right': len(ranked_ids),
+    }
+    return redirect('compare', year=year)
 
 
 @login_required

@@ -17,6 +17,20 @@
   <p style="margin-bottom:2rem;color:#a0ffa0;">All {{ total_entries }} entries voted!</p>
 {% endif %}
 
+{% if orphaned_votes %}
+  <div style="margin-bottom:2rem;padding:0.75rem 1rem;border:1px solid #6c63ff;border-radius:6px;background:#1a1a2e;">
+    <strong style="color:#ffcc00;">Unplaced votes</strong> — these were voted but not yet ranked:
+    <ul style="margin:0.5rem 0 0 1rem;padding:0;">
+      {% for v in orphaned_votes %}
+        <li style="margin-top:0.25rem;">
+          {% if v.entry.flag_emoji %}{{ v.entry.flag_emoji }} {% endif %}{{ v.entry.country }}
+          <a href="{% url 'rerank' event.year v.pk %}" class="btn btn-sm" style="margin-left:0.5rem;font-size:0.75rem;padding:0.2rem 0.5rem;">Place in ranking</a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}
+
 {% if ranking %}
   <table>
     <thead>
@@ -28,6 +42,7 @@
         <th>Song</th>
         <th>Note</th>
         <th style="text-align:center;">Show order</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -39,11 +54,12 @@
               <img src="{{ r.vote.entry.image_url }}" alt="" style="width:36px;height:36px;object-fit:cover;border-radius:4px;">
             {% endif %}
           </td>
-          <td>{{ r.vote.entry.country }}</td>
+          <td>{% if r.vote.entry.flag_emoji %}{{ r.vote.entry.flag_emoji }} {% endif %}{{ r.vote.entry.country }}</td>
           <td>{{ r.vote.entry.artist }}</td>
           <td style="color:#a0a0c0;">{{ r.vote.entry.song_title }}</td>
           <td style="color:#c0c0e0;font-style:italic;">{{ r.vote.nickname }}</td>
           <td style="text-align:center;color:#8080a0;">#{{ r.vote.entry.performance_order }}</td>
+          <td><a href="{% url 'rerank' event.year r.vote.pk %}" class="btn btn-sm" style="font-size:0.75rem;padding:0.2rem 0.5rem;">Rerank</a></td>
         </tr>
       {% endfor %}
     </tbody>
