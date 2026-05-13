@@ -1,0 +1,10 @@
+/.agent-shell/
+db.sqlite3
+staticfiles/
+__pycache__/
+*.pyc
+*.pyo
+.env
+flake.lock
+
+.direnv

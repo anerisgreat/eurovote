@@ -1,0 +1,33 @@
+{% extends "voting/base.html" %}
+{% block title %}Vote: {{ entry.country }} — {{ event.name }}{% endblock %}
+
+{% block content %}
+<a href="{% url 'index' event.year %}" style="color:#8080a0;text-decoration:none;font-size:0.9rem;">&larr; Back</a>
+
+<div style="margin:1.5rem 0;display:flex;gap:1.5rem;align-items:flex-start;flex-wrap:wrap;">
+  {% if entry.image %}
+    <img src="{{ entry.image_url }}" alt="{{ entry.country }}"
+         style="width:160px;height:160px;object-fit:cover;border-radius:8px;flex-shrink:0;">
+  {% endif %}
+  <div>
+    <p style="color:#8080a0;font-size:0.85rem;margin-bottom:0.3rem;">Performance #{{ entry.performance_order }}</p>
+    <h1 style="margin-bottom:0.3rem;">{{ entry.country }}</h1>
+    <p style="font-size:1.1rem;color:#c0c0e0;">{{ entry.artist }}</p>
+    <p style="font-size:0.95rem;color:#8080a0;font-style:italic;">"{{ entry.song_title }}"</p>
+  </div>
+</div>
+
+<form method="post" style="max-width:480px;">
+  {% csrf_token %}
+  {% for field in form %}
+    <div class="form-group">
+      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {{ field }}
+      {% if field.errors %}
+        <p style="color:#ff6b6b;font-size:0.85rem;margin-top:0.3rem;">{{ field.errors|join:", " }}</p>
+      {% endif %}
+    </div>
+  {% endfor %}
+  <button type="submit" class="btn btn-primary btn-lg">Save &amp; Start Ranking</button>
+</form>
+{% endblock %}

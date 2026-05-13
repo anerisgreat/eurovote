@@ -1,0 +1,18 @@
+{% extends "voting/base.html" %}
+{% block title %}Eurovision Vote{% endblock %}
+
+{% block content %}
+<h1>Eurovision Vote</h1>
+
+{% if events %}
+  <div style="display:flex;flex-direction:column;gap:1rem;max-width:480px;">
+    {% for event in events %}
+      <a href="{% url 'index' event.year %}" class="btn btn-secondary btn-lg" style="text-align:center;">
+        {{ event.name }}
+      </a>
+    {% endfor %}
+  </div>
+{% else %}
+  <p style="color:#8080a0;">No events loaded yet. Ask an admin to run <code>manage.py load_event &lt;year&gt;</code>.</p>
+{% endif %}
+{% endblock %}

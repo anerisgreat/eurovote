@@ -1,0 +1,99 @@
+{% extends "voting/base.html" %}
+{% block title %}Compare — {{ event.name }}{% endblock %}
+
+{% block content %}
+<div style="margin-bottom:1rem;">
+  <h2 style="margin-bottom:0.25rem;">Which did you prefer?</h2>
+  {% if remaining > 0 %}
+    <p style="color:#8080a0;font-size:0.85rem;">Up to {{ remaining }} more comparison{{ remaining|pluralize }} to go</p>
+  {% endif %}
+</div>
+
+<form method="post" id="compare-form">
+  {% csrf_token %}
+  <input type="hidden" name="choice" id="choice-input" value="">
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+
+    <!-- Existing ranked entry -->
+    <button type="button" class="choice-card" onclick="pick('1')">
+      {% if comp_vote.entry.image %}
+        <img src="{{ comp_vote.entry.image_url }}" alt="{{ comp_vote.entry.country }}">
+      {% else %}
+        <div class="no-image"></div>
+      {% endif %}
+      <div class="card-body">
+        <p class="card-country">{{ comp_vote.entry.country }}</p>
+        <p class="card-artist">{{ comp_vote.entry.artist }}</p>
+        <p class="card-song">"{{ comp_vote.entry.song_title }}"</p>
+        <p class="card-note">{{ comp_vote.nickname }}</p>
+      </div>
+      <div class="card-label">1 — already ranked</div>
+    </button>
+
+    <!-- New entry being inserted -->
+    <button type="button" class="choice-card" onclick="pick('2')">
+      {% if new_vote.entry.image %}
+        <img src="{{ new_vote.entry.image_url }}" alt="{{ new_vote.entry.country }}">
+      {% else %}
+        <div class="no-image"></div>
+      {% endif %}
+      <div class="card-body">
+        <p class="card-country">{{ new_vote.entry.country }}</p>
+        <p class="card-artist">{{ new_vote.entry.artist }}</p>
+        <p class="card-song">"{{ new_vote.entry.song_title }}"</p>
+        <p class="card-note">{{ new_vote.nickname }}</p>
+      </div>
+      <div class="card-label">2 — just watched</div>
+    </button>
+
+  </div>
+</form>
+
+<style>
+  .choice-card {
+    background: #1a1a2e;
+    border: 2px solid #2a2a4a;
+    border-radius: 10px;
+    padding: 0;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color 0.15s, transform 0.1s;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    color: inherit;
+    font-family: inherit;
+  }
+  .choice-card:hover {
+    border-color: #6c63ff;
+    transform: translateY(-2px);
+  }
+  .choice-card img, .no-image {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    display: block;
+  }
+  .no-image { background: #2a2a4a; }
+  .card-body { padding: 1rem; flex: 1; }
+  .card-country { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.2rem; }
+  .card-artist  { color: #c0c0e0; font-size: 0.95rem; margin-bottom: 0.15rem; }
+  .card-song    { color: #8080a0; font-size: 0.85rem; font-style: italic; margin-bottom: 0.5rem; }
+  .card-note    { color: #a0d0ff; font-size: 0.9rem; }
+  .card-label   {
+    padding: 0.5rem 1rem;
+    background: #111128;
+    font-size: 0.8rem;
+    color: #6060a0;
+    border-top: 1px solid #2a2a4a;
+  }
+</style>
+
+<script>
+  function pick(choice) {
+    document.getElementById('choice-input').value = choice;
+    document.getElementById('compare-form').submit();
+  }
+</script>
+{% endblock %}

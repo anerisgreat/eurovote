@@ -1,0 +1,20 @@
+{% extends "voting/base.html" %}
+{% block title %}Log in — Eurovision Vote{% endblock %}
+
+{% block content %}
+<h1>Log in</h1>
+<form method="post" style="max-width:360px;">
+  {% csrf_token %}
+  {% for field in form %}
+    <div class="form-group">
+      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {{ field }}
+      {% if field.errors %}
+        <p style="color:#ff6b6b;font-size:0.85rem;margin-top:0.3rem;">{{ field.errors|join:", " }}</p>
+      {% endif %}
+    </div>
+  {% endfor %}
+  <button type="submit" class="btn btn-primary">Log in</button>
+  <input type="hidden" name="next" value="{{ next }}">
+</form>
+{% endblock %}

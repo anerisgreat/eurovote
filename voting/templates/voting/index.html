@@ -1,0 +1,54 @@
+{% extends "voting/base.html" %}
+{% block title %}{{ event.name }} — Eurovision Vote{% endblock %}
+
+{% block content %}
+<div style="display:flex;align-items:baseline;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap;">
+  <h1 style="margin-bottom:0;">{{ event.name }}</h1>
+  <span style="color:#8080a0;font-size:0.9rem;">{{ voted_count }} / {{ total_entries }} voted</span>
+</div>
+
+{% if next_entry %}
+  <div style="margin-bottom:2rem;">
+    <a href="{% url 'vote_next' event.year %}" class="btn btn-primary btn-lg">
+      Vote Next: #{{ next_entry.performance_order }} {{ next_entry.country }}
+    </a>
+  </div>
+{% else %}
+  <p style="margin-bottom:2rem;color:#a0ffa0;">All {{ total_entries }} entries voted!</p>
+{% endif %}
+
+{% if ranking %}
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th></th>
+        <th>Country</th>
+        <th>Artist</th>
+        <th>Song</th>
+        <th>Note</th>
+        <th style="text-align:center;">Show order</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in ranking %}
+        <tr>
+          <td style="color:#6c63ff;font-weight:700;">{{ forloop.counter }}</td>
+          <td style="width:40px;">
+            {% if r.vote.entry.image %}
+              <img src="{{ r.vote.entry.image_url }}" alt="" style="width:36px;height:36px;object-fit:cover;border-radius:4px;">
+            {% endif %}
+          </td>
+          <td>{{ r.vote.entry.country }}</td>
+          <td>{{ r.vote.entry.artist }}</td>
+          <td style="color:#a0a0c0;">{{ r.vote.entry.song_title }}</td>
+          <td style="color:#c0c0e0;font-style:italic;">{{ r.vote.nickname }}</td>
+          <td style="text-align:center;color:#8080a0;">#{{ r.vote.entry.performance_order }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p style="color:#8080a0;">No votes yet. Hit the button above to start!</p>
+{% endif %}
+{% endblock %}
