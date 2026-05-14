@@ -115,6 +115,12 @@
               default = "/";
               description = "URL to redirect to after logout (e.g. Authelia's logout endpoint)";
             };
+
+            trustedOrigins = lib.mkOption {
+              type    = lib.types.str;
+              default = "";
+              description = "Space-separated CSRF_TRUSTED_ORIGINS (e.g. \"https://vote.example.com\"). Required when behind a reverse proxy.";
+            };
           };
 
           config = lib.mkIf cfg.enable {
@@ -124,10 +130,11 @@
               after       = [ "network.target" ];
 
               environment = {
-                DJANGO_DEBUG        = "false";
-                ALLOWED_HOSTS       = cfg.allowedHosts;
-                DJANGO_DB_PATH      = "${cfg.dataDir}/db.sqlite3";
-                LOGOUT_REDIRECT_URL = cfg.logoutRedirectUrl;
+                DJANGO_DEBUG          = "false";
+                ALLOWED_HOSTS         = cfg.allowedHosts;
+                DJANGO_DB_PATH        = "${cfg.dataDir}/db.sqlite3";
+                LOGOUT_REDIRECT_URL   = cfg.logoutRedirectUrl;
+                CSRF_TRUSTED_ORIGINS  = cfg.trustedOrigins;
               };
 
               serviceConfig = {

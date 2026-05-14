@@ -64,6 +64,10 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
+_trusted_origins = os.environ.get('CSRF_TRUSTED_ORIGINS', '')
+if _trusted_origins:
+    CSRF_TRUSTED_ORIGINS = _trusted_origins.split()
+
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
