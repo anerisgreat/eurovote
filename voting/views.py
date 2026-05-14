@@ -42,15 +42,31 @@ def event_list(request):
     return render(request, 'voting/event_list.html', {'events': get_all_events()})
 
 
+SORT_KEYS = {
+    'ranking':              lambda r: r.position,
+    'show_order':           lambda r: r.vote.entry.performance_order,
+    'performance_rating':   lambda r: -(r.vote.performance_rating or 0),
+    'visuals_rating':       lambda r: -(r.vote.visuals_rating or 0),
+    'singing_rating':       lambda r: -(r.vote.singing_rating or 0),
+    'song_production_rating': lambda r: -(r.vote.song_production_rating or 0),
+}
+
+
 @login_required
 def index(request, year):
     event = _get_event_or_404(year)
-    ranking = (
+    sort = request.GET.get('sort', 'ranking')
+    if sort not in SORT_KEYS:
+        sort = 'ranking'
+
+    ranking = list(
         RankingEntry.objects
         .filter(user=request.user, vote__event_year=year)
         .order_by('position')
         .select_related('vote')
     )
+    ranking.sort(key=SORT_KEYS[sort])
+
     total_entries = len(event.entries)
     voted_count = Vote.objects.filter(user=request.user, event_year=year).count()
     next_entry = _next_unvoted_entry(request.user, event)
@@ -64,6 +80,7 @@ def index(request, year):
     return render(request, 'voting/index.html', {
         'event': event,
         'ranking': ranking,
+        'sort': sort,
         'total_entries': total_entries,
         'voted_count': voted_count,
         'next_entry': next_entry,
@@ -87,6 +104,10 @@ def vote_next(request, year):
                 entry_id=entry.entry_id,
                 event_year=year,
                 nickname=form.cleaned_data['nickname'],
+                performance_rating=form.cleaned_data['performance_rating'],
+                visuals_rating=form.cleaned_data['visuals_rating'],
+                singing_rating=form.cleaned_data['singing_rating'],
+                song_production_rating=form.cleaned_data['song_production_rating'],
             )
 
             ranked_ids = _get_ranked_vote_ids(request.user, year)

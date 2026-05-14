@@ -32,6 +32,22 @@
 {% endif %}
 
 {% if ranking %}
+  <style>
+    .sort-btn {
+      display: inline-block;
+      font-size: 0.7rem;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      text-decoration: none;
+      color: #8080a0;
+      border: 1px solid #2a2a4a;
+      white-space: nowrap;
+    }
+    .sort-btn:hover { color: #fff; border-color: #6c63ff; }
+    .sort-btn.active { color: #6c63ff; border-color: #6c63ff; background: #1a1a38; }
+    th .sort-btn { margin-left: 0.3rem; }
+    td.rating { text-align: center; color: #c0c0e0; font-variant-numeric: tabular-nums; }
+  </style>
   <table>
     <thead>
       <tr>
@@ -41,7 +57,30 @@
         <th>Artist</th>
         <th>Song</th>
         <th>Note</th>
-        <th style="text-align:center;">Show order</th>
+        <th style="text-align:center;">
+          Show order
+          <a href="?sort=show_order" class="sort-btn {% if sort == 'show_order' %}active{% endif %}">sort</a>
+        </th>
+        <th style="text-align:center;">
+          Ranking
+          <a href="?sort=ranking" class="sort-btn {% if sort == 'ranking' %}active{% endif %}">sort</a>
+        </th>
+        <th style="text-align:center;">
+          Perf.
+          <a href="?sort=performance_rating" class="sort-btn {% if sort == 'performance_rating' %}active{% endif %}">sort</a>
+        </th>
+        <th style="text-align:center;">
+          Visuals
+          <a href="?sort=visuals_rating" class="sort-btn {% if sort == 'visuals_rating' %}active{% endif %}">sort</a>
+        </th>
+        <th style="text-align:center;">
+          Singing
+          <a href="?sort=singing_rating" class="sort-btn {% if sort == 'singing_rating' %}active{% endif %}">sort</a>
+        </th>
+        <th style="text-align:center;">
+          Song &amp; Prod.
+          <a href="?sort=song_production_rating" class="sort-btn {% if sort == 'song_production_rating' %}active{% endif %}">sort</a>
+        </th>
         <th></th>
       </tr>
     </thead>
@@ -59,6 +98,11 @@
           <td style="color:#a0a0c0;">{{ r.vote.entry.song_title }}</td>
           <td style="color:#c0c0e0;font-style:italic;">{{ r.vote.nickname }}</td>
           <td style="text-align:center;color:#8080a0;">#{{ r.vote.entry.performance_order }}</td>
+          <td style="text-align:center;color:#8080a0;">{{ r.position|add:1 }}</td>
+          <td class="rating">{{ r.vote.performance_rating|default:"—" }}</td>
+          <td class="rating">{{ r.vote.visuals_rating|default:"—" }}</td>
+          <td class="rating">{{ r.vote.singing_rating|default:"—" }}</td>
+          <td class="rating">{{ r.vote.song_production_rating|default:"—" }}</td>
           <td><a href="{% url 'rerank' event.year r.vote.pk %}" class="btn btn-sm" style="font-size:0.75rem;padding:0.2rem 0.5rem;">Rerank</a></td>
         </tr>
       {% endfor %}

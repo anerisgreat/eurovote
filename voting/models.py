@@ -6,7 +6,11 @@ class Vote(models.Model):
     user       = models.ForeignKey(User, on_delete=models.CASCADE, related_name='votes')
     entry_id   = models.CharField(max_length=50)   # e.g. "2026_norway"
     event_year = models.PositiveSmallIntegerField()  # e.g. 2026
-    nickname   = models.CharField(max_length=200)
+    nickname               = models.CharField(max_length=200)
+    performance_rating     = models.PositiveSmallIntegerField(null=True, blank=True)
+    visuals_rating         = models.PositiveSmallIntegerField(null=True, blank=True)
+    singing_rating         = models.PositiveSmallIntegerField(null=True, blank=True)
+    song_production_rating = models.PositiveSmallIntegerField(null=True, blank=True)
 
     class Meta:
         unique_together = [('user', 'entry_id')]

@@ -17,17 +17,76 @@
   </div>
 </div>
 
+<style>
+  .rating-input {
+    width: 5rem;
+    padding: 0.5rem 0.6rem;
+    background: #1e1e36;
+    border: 1px solid #3a3a5a;
+    border-radius: 6px;
+    color: #e8e8f0;
+    font-size: 1.1rem;
+    text-align: center;
+  }
+  .rating-input:focus { outline: none; border-color: #6c63ff; }
+  .ratings-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .rating-cell label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-size: 0.9rem;
+    color: #a0a0c0;
+  }
+  .rating-hint { font-size: 0.75rem; color: #606080; margin-top: 0.25rem; }
+</style>
+
 <form method="post" style="max-width:480px;">
   {% csrf_token %}
-  {% for field in form %}
-    <div class="form-group">
-      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-      {{ field }}
-      {% if field.errors %}
-        <p style="color:#ff6b6b;font-size:0.85rem;margin-top:0.3rem;">{{ field.errors|join:", " }}</p>
-      {% endif %}
-    </div>
-  {% endfor %}
+
+  <div class="form-group">
+    <label for="{{ form.nickname.id_for_label }}">{{ form.nickname.label }}</label>
+    {{ form.nickname }}
+    {% if form.nickname.errors %}
+      <p style="color:#ff6b6b;font-size:0.85rem;margin-top:0.3rem;">{{ form.nickname.errors|join:", " }}</p>
+    {% endif %}
+  </div>
+
+  <p style="font-size:0.85rem;color:#8080a0;margin-bottom:0.75rem;">Rate each category 1–10:</p>
+  <div class="ratings-grid">
+    {% with field=form.performance_rating %}
+      <div class="rating-cell">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}<p style="color:#ff6b6b;font-size:0.8rem;margin-top:0.2rem;">{{ field.errors|join:", " }}</p>{% endif %}
+      </div>
+    {% endwith %}
+    {% with field=form.visuals_rating %}
+      <div class="rating-cell">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}<p style="color:#ff6b6b;font-size:0.8rem;margin-top:0.2rem;">{{ field.errors|join:", " }}</p>{% endif %}
+      </div>
+    {% endwith %}
+    {% with field=form.singing_rating %}
+      <div class="rating-cell">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}<p style="color:#ff6b6b;font-size:0.8rem;margin-top:0.2rem;">{{ field.errors|join:", " }}</p>{% endif %}
+      </div>
+    {% endwith %}
+    {% with field=form.song_production_rating %}
+      <div class="rating-cell">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}<p style="color:#ff6b6b;font-size:0.8rem;margin-top:0.2rem;">{{ field.errors|join:", " }}</p>{% endif %}
+      </div>
+    {% endwith %}
+  </div>
+
   <button type="submit" class="btn btn-primary btn-lg">Save &amp; Start Ranking</button>
 </form>
 {% endblock %}
