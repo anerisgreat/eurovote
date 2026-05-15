@@ -2,161 +2,153 @@ event:
   year: 2026
   name: "Eurovision 2026 — Vienna"
 
-# Grand Final running order — update performance_order once the official draw is published.
-# Add image filenames under data/2026/images/ and set the image field to match.
 entries:
   - performance_order: 1
-    country: "Norway"
-    artist: "Kyle Alessandro"
-    song_title: "Lighter"
-    image: ""
+    country: "Denmark"
+    artist: "Søren Torpegaard Lund"
+    song_title: "Før Vi Går Hjem"
+    image: "denmark.webp"
 
   - performance_order: 2
-    country: "Denmark"
-    artist: "Sissal"
-    song_title: "Hallucination"
-    image: ""
+    country: "Germany"
+    artist: "Sarah Engels"
+    song_title: "Fire"
+    image: "germany.webp"
 
   - performance_order: 3
-    country: "Albania"
-    artist: "Shkodra Elektronike"
-    song_title: "Zjerm"
-    image: ""
+    country: "Israel"
+    artist: "Noam Bettan"
+    song_title: "Michelle"
+    image: "israel.webp"
 
   - performance_order: 4
-    country: "Latvia"
-    artist: "Tautumeitas"
-    song_title: "Bur man laimi"
-    image: ""
+    country: "Belgium"
+    artist: "ESSYLA"
+    song_title: "Dancing on the Ice"
+    image: "belgium.webp"
 
   - performance_order: 5
-    country: "Malta"
-    artist: "Miriana Conte"
-    song_title: "Serving"
-    image: ""
+    country: "Albania"
+    artist: "Alis"
+    song_title: "Nân"
+    image: "albania.webp"
 
   - performance_order: 6
-    country: "San Marino"
-    artist: "Gabry Ponte"
-    song_title: "Tutta l'Italia"
-    image: ""
+    country: "Greece"
+    artist: "Akylas"
+    song_title: "Ferto"
+    image: "greece.webp"
 
   - performance_order: 7
-    country: "Czechia"
-    artist: "AIKO"
-    song_title: "Kiss Kiss Goodbye"
-    image: ""
+    country: "Ukraine"
+    artist: "LELÉKA"
+    song_title: "Ridnym"
+    image: "ukraine.webp"
 
   - performance_order: 8
-    country: "Austria"
-    artist: "JJ"
-    song_title: "Wasted Love"
-    image: ""
+    country: "Australia"
+    artist: "Delta Goodrem"
+    song_title: "Eclipse"
+    image: "australia.webp"
 
   - performance_order: 9
-    country: "Iceland"
-    artist: "VÆB"
-    song_title: "RÓT"
-    image: ""
+    country: "Serbia"
+    artist: "LAVINA"
+    song_title: "Kraj Mene"
+    image: "serbia.webp"
 
   - performance_order: 10
-    country: "Lithuania"
-    artist: "Katarsis"
-    song_title: "Tavo akys"
-    image: ""
+    country: "Malta"
+    artist: "AIDAN"
+    song_title: "Bella"
+    image: "malta.webp"
 
   - performance_order: 11
-    country: "Sweden"
-    artist: "KAJ"
-    song_title: "Bara Bada Bastu"
-    image: ""
+    country: "Czechia"
+    artist: "Daniel Zizka"
+    song_title: "CROSSROADS"
+    image: "czechia.webp"
 
   - performance_order: 12
-    country: "Cyprus"
-    artist: "Theo Evan"
-    song_title: "Headspace"
-    image: ""
+    country: "Bulgaria"
+    artist: "DARA"
+    song_title: "Bangaranga"
+    image: "bulgaria.webp"
 
   - performance_order: 13
-    country: "Ireland"
-    artist: "Emmy"
-    song_title: "Laika Party"
-    image: ""
+    country: "Croatia"
+    artist: "LELEK"
+    song_title: "Andromeda"
+    image: "croatia.webp"
 
   - performance_order: 14
-    country: "Australia"
-    artist: "Go-Jo"
-    song_title: "Milkshake Man"
-    image: ""
+    country: "United Kingdom"
+    artist: "LOOK MUM NO COMPUTER"
+    song_title: "Eins, Zwei, Drei"
+    image: "united_kingdom.webp"
 
   - performance_order: 15
-    country: "Armenia"
-    artist: "PARG"
-    song_title: "SURVIVOR"
-    image: ""
+    country: "France"
+    artist: "Monroe"
+    song_title: "Regarde !"
+    image: "france.webp"
 
   - performance_order: 16
-    country: "United Kingdom"
-    artist: "Remember Monday"
-    song_title: "What the Hell Just Happened?"
-    image: ""
+    country: "Moldova"
+    artist: "Satoshi"
+    song_title: "Viva, Moldova!"
+    image: "moldova.webp"
 
   - performance_order: 17
-    country: "Estonia"
-    artist: "Tommy Cash"
-    song_title: "Espresso Macchiato"
-    image: ""
+    country: "Finland"
+    artist: "Linda Lampenius x Pete Parkkonen"
+    song_title: "Liekinheitin"
+    image: "finland.webp"
 
   - performance_order: 18
-    country: "Germany"
-    artist: "Abor & Tynna"
-    song_title: "Baller"
-    image: ""
+    country: "Poland"
+    artist: "ALICJA"
+    song_title: "Pray"
+    image: "poland.webp"
 
   - performance_order: 19
-    country: "France"
-    artist: "Louane"
-    song_title: "maman"
-    image: ""
+    country: "Lithuania"
+    artist: "Lion Ceccah"
+    song_title: "Sólo Quiero Más"
+    image: "lithuania.webp"
 
   - performance_order: 20
-    country: "Greece"
-    artist: "Klavdia"
-    song_title: "Asteromata"
-    image: ""
+    country: "Sweden"
+    artist: "FELICIA"
+    song_title: "My System"
+    image: "sweden.webp"
 
   - performance_order: 21
-    country: "Poland"
-    artist: "Justyna Steczkowska"
-    song_title: "GAJA"
-    image: ""
+    country: "Cyprus"
+    artist: "Antigoni"
+    song_title: "JALLA"
+    image: "cyprus.webp"
 
   - performance_order: 22
-    country: "Switzerland"
-    artist: "Zoë Më"
-    song_title: "Voyage"
-    image: ""
+    country: "Italy"
+    artist: "Sal Da Vinci"
+    song_title: "Per Sempre Sì"
+    image: "italy.webp"
 
   - performance_order: 23
-    country: "Finland"
-    artist: "Erika Vikman"
-    song_title: "Ich komme"
-    image: ""
+    country: "Norway"
+    artist: "JONAS LOVV"
+    song_title: "YA YA YA"
+    image: "norway.webp"
 
   - performance_order: 24
-    country: "Israel"
-    artist: "Yuval Raphael"
-    song_title: "New Day Will Rise"
-    image: ""
+    country: "Romania"
+    artist: "Alexandra Căpitănescu"
+    song_title: "Choke Me"
+    image: "romania.webp"
 
   - performance_order: 25
-    country: "Spain"
-    artist: "Melody"
-    song_title: "ESA DIVA"
-    image: ""
-
-  - performance_order: 26
-    country: "Italy"
-    artist: "Lucio Corsi"
-    song_title: "Volevo essere un duro"
-    image: ""
+    country: "Austria"
+    artist: "COSMÓ"
+    song_title: "Tanzschein"
+    image: "austria.webp"
