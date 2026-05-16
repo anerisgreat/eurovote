@@ -1,7 +1,8 @@
+import io
 import math
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.db.models import F
 
 from .models import Vote, RankingEntry
@@ -163,6 +164,140 @@ def rerank(request, year, vote_id):
         'right': len(ranked_ids),
     }
     return redirect('compare', year=year)
+
+
+@login_required
+def ranking_image(request, year):
+    from PIL import Image, ImageDraw, ImageFont
+
+    event = _get_event_or_404(year)
+    ranking = list(
+        RankingEntry.objects
+        .filter(user=request.user, vote__event_year=year)
+        .order_by('position')
+        .select_related('vote')
+    )
+    if not ranking:
+        raise Http404("No ranking to export")
+
+    # ── Palette ──────────────────────────────────────────────────────────────
+    C_BG     = (13,  13,  26)
+    C_BG_ALT = (18,  18,  42)
+    C_HDR    = (20,  20,  50)
+    C_PURPLE = (108, 99,  255)
+    C_WHITE  = (255, 255, 255)
+    C_GRAY   = (192, 192, 224)
+    C_DIM    = (128, 128, 160)
+    C_NOTE   = (160, 160, 255)
+    C_LINE   = (42,  42,  80)
+
+    # ── Fonts ────────────────────────────────────────────────────────────────
+    try:
+        f_body = ImageFont.load_default(size=14)
+        f_sm   = ImageFont.load_default(size=12)
+        f_lg   = ImageFont.load_default(size=22)
+    except TypeError:
+        f_body = f_sm = f_lg = ImageFont.load_default()
+
+    # ── Layout ───────────────────────────────────────────────────────────────
+    PAD    = 36
+    ROW_H  = 34
+    HDR_H  = 86
+    THDR_H = 28
+
+    # (label, width, align)
+    COLS = [
+        ('#',         36,  'right'),
+        ('Country',   162, 'left'),
+        ('Artist',    150, 'left'),
+        ('Song',      150, 'left'),
+        ('Note',      140, 'left'),
+        ('Perf',       44, 'center'),
+        ('Visuals',    44, 'center'),
+        ('Singing',    44, 'center'),
+        ('Song/Prod',  56, 'center'),
+    ]
+    GAP = 10
+
+    content_w = sum(c[1] for c in COLS) + GAP * (len(COLS) - 1)
+    width  = content_w + PAD * 2
+    height = HDR_H + THDR_H + ROW_H * len(ranking) + PAD
+
+    img  = Image.new('RGB', (width, height), C_BG)
+    draw = ImageDraw.Draw(img)
+
+    def col_x(i):
+        return PAD + sum(COLS[j][1] + GAP for j in range(i))
+
+    def fit(text, max_w, font):
+        if not text:
+            return ''
+        try:
+            if draw.textlength(text, font=font) <= max_w:
+                return text
+            while text and draw.textlength(text + '…', font=font) > max_w:
+                text = text[:-1]
+            return text + '…' if text else ''
+        except Exception:
+            return text[:int(max_w / 8)]  # rough fallback
+
+    def draw_cell(col_i, y, text, font, color, v_off=0):
+        label, w, align = COLS[col_i]
+        x  = col_x(col_i)
+        t  = fit(str(text), w, font)
+        try:
+            tw = draw.textlength(t, font=font)
+        except Exception:
+            tw = len(t) * 8
+        if align == 'right':
+            draw.text((x + w - tw, y + v_off), t, fill=color, font=font)
+        elif align == 'center':
+            draw.text((x + (w - tw) / 2, y + v_off), t, fill=color, font=font)
+        else:
+            draw.text((x, y + v_off), t, fill=color, font=font)
+
+    # ── Header ───────────────────────────────────────────────────────────────
+    draw.rectangle([(0, 0), (width, HDR_H)], fill=C_HDR)
+    draw.text((PAD, 20), event.name, fill=C_WHITE, font=f_lg)
+    draw.text((PAD, 52), f"{request.user.username}'s personal ranking", fill=C_DIM, font=f_body)
+    draw.rectangle([(0, HDR_H - 3), (width, HDR_H)], fill=C_PURPLE)
+
+    # ── Column headers ───────────────────────────────────────────────────────
+    ty = HDR_H
+    draw.rectangle([(0, ty), (width, ty + THDR_H)], fill=C_HDR)
+    for i, (label, w, align) in enumerate(COLS):
+        draw_cell(i, ty + 7, label, f_sm, C_DIM)
+    draw.line([(0, ty + THDR_H - 1), (width, ty + THDR_H - 1)], fill=C_LINE)
+
+    # ── Rows ─────────────────────────────────────────────────────────────────
+    v_off = (ROW_H - 14) // 2
+    for idx, r in enumerate(ranking):
+        y = HDR_H + THDR_H + idx * ROW_H
+        draw.rectangle([(0, y), (width, y + ROW_H)], fill=C_BG_ALT if idx % 2 == 0 else C_BG)
+
+        vote  = r.vote
+        entry = vote.entry
+        draw_cell(0, y, idx + 1,                                          f_body, C_PURPLE, v_off)
+        draw_cell(1, y, entry.country,                                    f_body, C_WHITE,  v_off)
+        draw_cell(2, y, entry.artist or '',                               f_body, C_GRAY,   v_off)
+        draw_cell(3, y, entry.song_title or '',                           f_body, C_DIM,    v_off)
+        draw_cell(4, y, vote.nickname or '',                              f_body, C_NOTE,   v_off)
+        draw_cell(5, y, vote.performance_rating     or '—',               f_body, C_GRAY,   v_off)
+        draw_cell(6, y, vote.visuals_rating         or '—',               f_body, C_GRAY,   v_off)
+        draw_cell(7, y, vote.singing_rating         or '—',               f_body, C_GRAY,   v_off)
+        draw_cell(8, y, vote.song_production_rating or '—',               f_body, C_GRAY,   v_off)
+
+        draw.line([(PAD, y + ROW_H - 1), (width - PAD, y + ROW_H - 1)], fill=C_LINE)
+
+    # ── Serve ────────────────────────────────────────────────────────────────
+    buf = io.BytesIO()
+    img.save(buf, format='PNG', optimize=True)
+    buf.seek(0)
+
+    filename = f"eurovision_{year}_{request.user.username}_ranking.png"
+    response = HttpResponse(buf, content_type='image/png')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    return response
 
 
 @login_required

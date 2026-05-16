@@ -16,6 +16,7 @@
       pythonEnv = pkgs: pkgs.python3.withPackages (ps: [
         ps.django
         ps.pyyaml
+        ps.pillow
       ]);
 
       # Source package: the app tree in the Nix store.
